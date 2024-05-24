@@ -41,8 +41,17 @@ class NanoSignBlockOperation extends LedgerInputOperation<(String, String)> {
   @override
   int get p1 => 0x00;
 
+  /// 0x01 - Use xrb_ prefix for recipient address (instead of the default nano_ one) when confirming change with user
+  /// 0x02 - Use xrb_ prefix for representative address (instead of the default nano_ one) when confirming change with user
   @override
-  int get p2 => 0x00;
+  int get p2 {
+    var result = 0x00;
+
+    if (link.startsWith("xrb_")) result |= 0x01;
+    if (representative.startsWith("xrb_")) result |= 0x02;
+
+    return result;
+  }
 
   @override
   Future<Uint8List> writeInputData() async {
